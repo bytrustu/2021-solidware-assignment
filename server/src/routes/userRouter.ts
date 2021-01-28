@@ -5,7 +5,6 @@ import { IUserName, IUserId, IUserData } from '../type/Interfaces';
 
 const router = express.Router();
 
-
 /**
  * @route   get api/user/list
  * @desc    request user list
@@ -13,70 +12,70 @@ const router = express.Router();
  */
 router.get('/list', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userList:IUserData[] = await db.userList();
+    const userList: IUserData[] = await db.userList();
     res.status(200).json(userList);
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ 'error': '오류가 발생 했습니다.' });
+    return res.status(500).json({ 'msg': '오류가 발생 했습니다.' });
   }
 });
 
 /**
- * @route   POST api/user/add_user
+ * @route   POST api/user/add
  * @desc    register user
  * @access  public
  */
-router.post('/add_user', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name }: IUserName = req.body;
     if (!testRegExp('name', name)) {
-      return res.status(500).json({ 'error': '이름이 올바르지 않습니다.' });
+      return res.status(500).json({ 'msg': '이름이 올바르지 않습니다.' });
     }
-    const findUserData:IUserData[] = await db.findByUserName({ name });
+    const findUserData: IUserData[] = await db.findUserByUserName({ name });
     if (findUserData.length > 0) {
-      return res.status(500).json({ 'error': '이미 등록 된 이름 입니다.' });
+      return res.status(500).json({ 'msg': '이미 등록 된 이름 입니다.' });
     }
     await db.insertUserName({ name });
     res.status(200).send();
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ 'error': '오류가 발생 했습니다.' });
+    return res.status(500).json({ 'msg': '오류가 발생 했습니다.' });
   }
 });
 
 /**
- * @route   POST api/user/delete_user
+ * @route   POST api/user/delete
  * @desc    delete user
  * @access  public
  */
-router.post('/delete_user', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/delete', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { user_id }: IUserId = req.body;
     await db.deleteUserByUserId({ user_id });
     res.status(200).send();
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ 'error': '오류가 발생 했습니다.' });
+    return res.status(500).json({ 'msg': '오류가 발생 했습니다.' });
   }
 });
 
 /**
- * @route   POST api/user/edit_user
+ * @route   POST api/user/edit
  * @desc    edit user
  * @access  public
  */
-router.post('/edit_user', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/edit', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { user_id, name }: IUserData = req.body;
-    const findUserData:IUserData[] = await db.findByUserName({ name });
+    const findUserData: IUserData[] = await db.findUserByUserName({ name });
     if (findUserData.length > 0) {
-      return res.status(500).json({ 'error': '이미 등록 된 이름 입니다.' });
+      return res.status(500).json({ 'msg': '이미 등록 된 이름 입니다.' });
     }
     await db.editUserNameByUserId({ user_id, name });
     res.status(200).send();
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ 'error': '오류가 발생 했습니다.' });
+    return res.status(500).json({ 'msg': '오류가 발생 했습니다.' });
   }
 });
 

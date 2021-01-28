@@ -1,5 +1,13 @@
 import * as db from '../config/mysql_connect';
-import { IUserData, IUserId, IUserName } from '../type/Interfaces';
+import {
+  ITeamData,
+  IRequestDetail,
+  IUserData,
+  IUserId,
+  IUserName,
+  TTeamData,
+  ITeamAndUser,
+} from '../type/Interfaces';
 
 export const userList = async (): Promise<IUserData[]> => {
   try {
@@ -13,7 +21,7 @@ export const userList = async (): Promise<IUserData[]> => {
   }
 };
 
-export const findByUserName = async (param: IUserName): Promise<IUserData[]> => {
+export const findUserByUserName = async (param: IUserName): Promise<IUserData[]> => {
   try {
     const { name } = param;
     const SQL: string = 'select * from User where name = ? and disabled = 0';
@@ -59,6 +67,60 @@ export const editUserNameByUserId = async (param: IUserData): Promise<boolean> =
     const SQL_VALUES: (number|string)[] = [user_id, name];
     await db.connect((con: any) => con.query(SQL, SQL_VALUES))();
     return true;
+  } catch (e) {
+    console.error(e);
+    throw new Error(e);
+  }
+};
+
+
+export const insertTeam = async (param: ITeamData): Promise<number | undefined> => {
+  try {
+    const { teamData } = param;
+    let resultRow;
+    await db.transaction(async (con: any) => {
+      const GENERATION_SQL: string = 'insert into Generation values()';
+      const GENERATION_SQL_VALUES: [] = [];
+      const [generationRow] = await con.query(GENERATION_SQL, GENERATION_SQL_VALUES)
+      resultRow = generationRow.insertId;
+      let stepCount = 0;
+      for (const team of teamData) {
+        let nameCount = 0;
+        for (const step of team) {
+          const GROUP_SQL: string = 'insert into Team(team_step, team_name, generation_id) values(?, ?, ?)';
+          const GROUP_SQL_VALUES: number[] = [stepCount, nameCount, generationRow.insertId];
+          const [teamRow] = await con.query(GROUP_SQL, GROUP_SQL_VALUES);
+          nameCount++;
+          for (const member of step) {
+            const MEMBER_SQL: string = 'insert into Member(user_id, team_id) values(?, ?)';
+            const MEMBER_SQL_VALUES: number[] = [member, teamRow.insertId];
+            await con.query(MEMBER_SQL, MEMBER_SQL_VALUES);
+          }
+        }
+        stepCount++;
+      }
+    })();
+    return resultRow;
+  } catch (e) {
+    console.error(e);
+    throw new Error(e);
+  }
+};
+
+export const findByTeamByGenerationId = async (param: IRequestDetail): Promise<(ITeamAndUser)[]> => {
+  try {
+    const { generate_id } = param;
+    const SQL: string = `
+      select Team.team_id, Team.team_step, Team.team_name, User.name, User.disabled from Generation
+      inner join Team on Team.generation_id  = Generation.generation_id 
+      inner join Member on Member.Team_id = Team.team_id
+      inner join User on User.user_id = Member.user_id
+      where Generation.generation_id = 1
+      order by Team.team_step, Team.team_name
+    `;
+    const SQL_VALUES: number[] = [generate_id];
+    const [row] = await db.connect((con: any) => con.query(SQL, SQL_VALUES))();
+    return row;
   } catch (e) {
     console.error(e);
     throw new Error(e);
