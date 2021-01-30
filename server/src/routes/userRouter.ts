@@ -12,8 +12,8 @@ const router = express.Router();
  */
 router.get('/list', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userList: IUserData[] = await db.userList();
-    res.status(200).json(userList);
+    const userDataList: IUserData[] = await db.userDataList();
+    res.status(200).json(userDataList);
   } catch (e) {
     console.error(e);
     return res.status(500).json({ 'msg': '오류가 발생 했습니다.' });

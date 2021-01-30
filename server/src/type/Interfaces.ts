@@ -22,7 +22,7 @@ export interface ITeamFilter {
 }
 
 export interface ITeamData {
-  teamData: TTeamData
+  teams: TTeamData
 }
 
 export type TTeamData = Array<number[][]>

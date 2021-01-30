@@ -1,8 +1,10 @@
-import { IUserData } from '../type/Interfaces';
-
 interface IRegExp {
   [key: string]: RegExp;
 }
+
+type TypeRange = (length: number, init: number) => number[];
+
+type TypeSuffleArray = (array: any[]) => any[];
 
 export const testRegExp = (type: string, value: string): boolean => {
   const rules: IRegExp = {
@@ -17,17 +19,12 @@ export const testRegExp = (type: string, value: string): boolean => {
 
 export const generateMessage = (message: string) => ({ msg: message });
 
-export const shuffleArray = (array: any[]) => array.sort(_ => Math.random() - 0.5);
+export const range: TypeRange = (length, init) => Array.from({ length }).map((_, index) => index + init);
 
-export const generateTeam = (users: IUserData[], minUserCount: number, groupCount: number) => {
-  const requireCount = minUserCount * groupCount;
-  if (users.length < requireCount) return false;
+export const shuffleArray: TypeSuffleArray = (array) => array.sort(() => Math.random() - 0.5);
 
-  const group = {};
-
-
-
-  const shuffleUser:IUserData[] = shuffleArray(users);
-
-
-};
+export const removeTextRow = (queryData: any) =>
+  JSON.parse(
+    JSON.stringify(queryData)
+      .replace(/TextRow/g, ''),
+  );

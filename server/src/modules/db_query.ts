@@ -9,7 +9,7 @@ import {
   ITeamAndUser,
 } from '../type/Interfaces';
 
-export const userList = async (): Promise<IUserData[]> => {
+export const userDataList = async (): Promise<IUserData[]> => {
   try {
     const SQL: string = 'select user_id, name from User where disabled = 0';
     const SQL_VALUES:any = [];
@@ -20,6 +20,19 @@ export const userList = async (): Promise<IUserData[]> => {
     throw new Error(e);
   }
 };
+
+export const userIdList = async (): Promise<{user_id:number}[]> => {
+  try {
+    const SQL: string = 'select user_id from User where disabled = 0';
+    const SQL_VALUES:any = [];
+    const [row] = await db.connect((con: any) => con.query(SQL, SQL_VALUES))();
+    return row;
+  } catch (e) {
+    console.error(e);
+    throw new Error(e);
+  }
+};
+
 
 export const findUserByUserName = async (param: IUserName): Promise<IUserData[]> => {
   try {
@@ -76,7 +89,7 @@ export const editUserNameByUserId = async (param: IUserData): Promise<boolean> =
 
 export const insertTeam = async (param: ITeamData): Promise<number | undefined> => {
   try {
-    const { teamData } = param;
+    const { teams } = param;
     let resultRow;
     await db.transaction(async (con: any) => {
       const GENERATION_SQL: string = 'insert into Generation values()';
@@ -84,7 +97,7 @@ export const insertTeam = async (param: ITeamData): Promise<number | undefined> 
       const [generationRow] = await con.query(GENERATION_SQL, GENERATION_SQL_VALUES)
       resultRow = generationRow.insertId;
       let stepCount = 0;
-      for (const team of teamData) {
+      for (const team of teams) {
         let nameCount = 0;
         for (const step of team) {
           const GROUP_SQL: string = 'insert into Team(team_step, team_name, generation_id) values(?, ?, ?)';
