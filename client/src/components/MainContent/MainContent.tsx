@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const StyleMainContent = styled.section`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 80%;
   height: auto;
 `;

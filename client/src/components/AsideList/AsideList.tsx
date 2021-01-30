@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Image from 'next/image';
 
 const StyleAsideList = styled.aside`
-  width: 250px;
+  width: 270px;
   height: auto;
   position: relative;
 `;

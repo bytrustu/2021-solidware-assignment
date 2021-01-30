@@ -9,7 +9,7 @@ const StyleMainTitle = styled.section`
   align-items: center;
   position: relative;
   width: 100%;
-  height: 88px;
+  height: 100px;
   padding: 0 60px;
   background-color: #fff;
   border: 1px solid #dcdcdc;

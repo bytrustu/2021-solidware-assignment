@@ -19,11 +19,13 @@ import {
 
 
 type TStateObj = {
+  type: string,
   state: boolean,
   msg: string
 }
 
 const stateObj: TStateObj = {
+  type: '',
   state: false,
   msg: '',
 };
@@ -73,18 +75,18 @@ export default (state: TCommonReducerState = initialState, action: CommonAction)
   return produce(state, (draft: Draft<TCommonReducerState>) => {
     switch (action.type) {
       case REGISTER_USER_REQUEST : {
-        draft.loading = { state: true, msg: '유저를 추가 중입니다.' };
-        draft.error = { state: false, msg: '' };
+        draft.loading = { type: REGISTER_USER_REQUEST, state: true, msg: '유저를 추가 중입니다.' };
+        draft.error = { type:'', state: false, msg: '' };
         break;
       }
       case REGISTER_USER_SUCCESS: {
-        draft.loading = { state: true, msg: '' };
-        draft.success = { state: false, msg: '유저를 추가 했습니다.' };
+        draft.loading = { type:'', state: false, msg: '' };
+        draft.success = { type:REGISTER_USER_SUCCESS, state: true, msg: '유저를 추가 했습니다.' };
         break;
       }
       case REGISTER_USER_FAILURE: {
-        draft.loading = { state: false, msg: '' };
-        draft.error = { state: true, msg: '오류가 발생 했습니다.' };
+        draft.loading = { type:'', state: false, msg: '' };
+        draft.error = { type:REGISTER_USER_FAILURE, state: true, msg: '오류가 발생 했습니다.' };
         break;
       }
       default: {

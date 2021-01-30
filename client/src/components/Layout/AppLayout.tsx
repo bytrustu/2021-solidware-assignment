@@ -10,6 +10,7 @@ interface Props {
 
 const StyleAppLayout = styled.div`
   max-height: 100vh;
+  min-width: 1600px;
   overflow: hidden;
 `
 
