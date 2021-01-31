@@ -28,7 +28,10 @@ router.post(
     try {
       const { page }: { page: number } = req.body;
       const teamList: IGenerationData[] = await db.loadTeamList({ page });
-      res.status(200).json(teamList);
+      const teamListCount: number = await db.loadTeamCount();
+      console.log(teamListCount);
+      const maxPage = Math.ceil(teamListCount / 5);
+      res.status(200).json({ teamList, currentPage: page, maxPage });
     } catch (e) {
       console.error(e);
       return res.status(500).json(notCreateTeamMsg);
@@ -96,10 +99,36 @@ router.get(
   "/detail/:generate_id",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { generate_id }: IRequestDetail = req.body;
-      const findTeamList: ITeamAndUser[] = await db.findByTeamByGenerationId({
-        generate_id,
+      const notLoadDetailMsg = generateMessage("팀 정보 호출에 실패 했습니다.");
+      const { generate_id } = req.params;
+      const generation_id: number = parseInt(generate_id, 10);
+
+      const findTeamOptions: IGenerationData[] = await db.findGenerationById({
+        generate_id: generation_id,
       });
+      if (findTeamOptions.length < 1) {
+        return res.status(500).json(notLoadDetailMsg);
+      }
+      const {
+        generation_users,
+        generation_group,
+        generation_limit,
+        generation_case,
+      } = findTeamOptions[0];
+      const resultTeamOptions = {
+        users: generation_users,
+        group: generation_group,
+        limit: generation_limit,
+        teamCase: JSON.parse(generation_case),
+      };
+
+      const findTeamList: ITeamAndUser[] = await db.findByTeamByGenerationId({
+        generate_id: generation_id,
+      });
+      if (findTeamList.length < 1) {
+        return res.status(500).json(notLoadDetailMsg);
+      }
+
       const resultTeamList: IResultTeam = findTeamList.reduce(
         (acc: any[], curr: ITeamAndUser) => {
           const { team_step, team_name, name, disabled } = curr;
@@ -111,7 +140,10 @@ router.get(
         },
         []
       );
-      res.status(200).json(resultTeamList);
+
+      res
+        .status(200)
+        .json({ teams: resultTeamList, options: resultTeamOptions });
     } catch (e) {
       console.error(e);
       return res.status(500).json({ msg: "오류가 발생 했습니다." });

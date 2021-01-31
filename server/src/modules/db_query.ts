@@ -158,9 +158,21 @@ export const loadTeamList = async (param: {
   }
 };
 
-export const findByTeamByGenerationId = async (
-  param: IRequestDetail
-): Promise<ITeamAndUser[]> => {
+export const loadTeamCount = async (): Promise<number> => {
+  try {
+    const SQL = `select count(*) as count from Generation`;
+    const SQL_VALUES: [] = [];
+    const [row] = await db.connect((con: any) => con.query(SQL, SQL_VALUES))();
+    return row[0].count;
+  } catch (e) {
+    console.error(e);
+    throw new Error(e);
+  }
+};
+
+export const findByTeamByGenerationId = async (param: {
+  generate_id: number;
+}): Promise<ITeamAndUser[]> => {
   try {
     const { generate_id } = param;
     const SQL = `
@@ -168,9 +180,25 @@ export const findByTeamByGenerationId = async (
       inner join Team on Team.generation_id  = Generation.generation_id 
       inner join Member on Member.Team_id = Team.team_id
       inner join User on User.user_id = Member.user_id
-      where Generation.generation_id = 1
+      where Generation.generation_id = ?
       order by Team.team_step, Team.team_name
     `;
+    const SQL_VALUES: number[] = [generate_id];
+    const [row] = await db.connect((con: any) => con.query(SQL, SQL_VALUES))();
+    return row;
+  } catch (e) {
+    console.error(e);
+    throw new Error(e);
+  }
+};
+
+export const findGenerationById = async (param: {
+  generate_id: number;
+}): Promise<IGenerationData[]> => {
+  try {
+    const { generate_id } = param;
+    const SQL = `select generation_users, generation_limit, generation_group, generation_case from Generation
+                  where generation_id = ? `;
     const SQL_VALUES: number[] = [generate_id];
     const [row] = await db.connect((con: any) => con.query(SQL, SQL_VALUES))();
     return row;
