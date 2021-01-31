@@ -106,8 +106,8 @@ function* watchDeleteUser() {
 }
 
 // Load Team List
-function loadTeamListAPI() {
-  return axios.post(`/team/list`);
+function loadTeamListAPI(data: { page: number }) {
+  return axios.post(`/team/list`, data);
 }
 
 function* loadTeamList(action: { data: number }) {
@@ -143,7 +143,7 @@ function* generateTeam(action: { data: number }) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const result = yield call(generateTeamAPI, action.data);
-    console.log(result);
+    yield sleep(1);
     yield put({
       type: GENERATE_TEAM_SUCCESS,
       payload: result.data,
@@ -161,6 +161,34 @@ function* watchGenerateTeam() {
   yield takeLatest(GENERATE_TEAM_REQUEST, generateTeam);
 }
 
+// Detail Team
+function detailTeamAPI(data: number) {
+  return axios.get(`/team/detail/${data}`);
+}
+
+function* detailTeam(action: { data: number }) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const result = yield call(detailTeamAPI, action.data);
+    yield sleep(2);
+    yield put({
+      type: DETAIL_TEAM_SUCCESS,
+      payload: result.data,
+    });
+  } catch (e) {
+    console.error(e);
+    yield put({
+      type: DETAIL_TEAM_FAILURE,
+      error: e.response,
+    });
+  }
+}
+
+function* watchDetailTeam() {
+  yield takeLatest(DETAIL_TEAM_REQUEST, detailTeam);
+}
+
 export default function* companySaga() {
   yield all([
     fork(watchRegisterUser),
@@ -168,5 +196,6 @@ export default function* companySaga() {
     fork(watchDeleteUser),
     fork(watchLoadTeamList),
     fork(watchGenerateTeam),
+    fork(watchDetailTeam),
   ]);
 }

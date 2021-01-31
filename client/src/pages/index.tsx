@@ -11,6 +11,8 @@ import {
   TStateObj,
   clearStateObj,
   loadTeamListAction,
+  TTeamListState,
+  detailTeamAction,
 } from "../redux/reducers/commonReducer";
 import MainTitle from "../components/MainTitle/MainTitle";
 import ContentWrap from "../components/MainContent/ContentWrap";
@@ -34,6 +36,8 @@ import {
   CLEAR_STATE_OBJECT,
   DELETE_USER_FAILURE,
   DELETE_USER_SUCCESS,
+  DETAIL_TEAM_REQUEST,
+  DETAIL_TEAM_SUCCESS,
   GENERATE_TEAM_FAILURE,
   GENERATE_TEAM_REQUEST,
   GENERATE_TEAM_SUCCESS,
@@ -45,7 +49,12 @@ import {
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
 } from "../redux/types";
+import { TypeGenerationOptions, TypeTeams } from "../type/types";
+import { ITeamDetail } from "../type/interfaces";
 import Skeleton from "react-loading-skeleton";
+import TeamPagination from "../components/Pagination/TeamPagination";
+import Loading from "../components/Loading/Loading";
+import TeamModal from "../components/Modal/TeamModal";
 
 type TypeFormState = {
   name: string;
@@ -58,9 +67,17 @@ type TypeUser = {
   name: string;
 };
 
+type TypeTeamUser = {
+  name: string;
+  disabled: number;
+};
+
 type TypeCommonState = {
   userList: TypeUser[];
   teamList: IGenerationData[];
+  teamListState: TTeamListState;
+  teamDetail: ITeamDetail;
+  generate_id: number | null;
   success: TStateObj;
   loading: TStateObj;
   error: TStateObj;
@@ -74,6 +91,9 @@ const IndexPage = () => {
   const {
     userList,
     teamList,
+    teamListState,
+    teamDetail,
+    generate_id,
     success,
     loading,
     error,
@@ -82,6 +102,8 @@ const IndexPage = () => {
   const [name, onChangeName, , resetName] = useInput("");
   const [group, onChangeGroup, , resetGroup] = useInput(2);
   const [limit, onChangeLimit, , resetLimit] = useInput(1);
+  const [visibleModal, setVisibleModal] = useState<boolean>(false);
+  const [loadingText, setLoadingText] = useState<string>("");
 
   const onClickRegisterUserHandle = (): void => {
     dispatch(registerUserAction(name));
@@ -96,6 +118,33 @@ const IndexPage = () => {
     dispatch(deleteUserAction(user_id));
   };
 
+  const onClickPrevHandle = () => {
+    teamListState &&
+      dispatch(loadTeamListAction({ page: teamListState.currentPage - 1 }));
+  };
+
+  const onClickNextHandle = () => {
+    teamListState &&
+      dispatch(loadTeamListAction({ page: teamListState.currentPage + 1 }));
+  };
+
+  const onClickModalCloseHandle = () => {
+    setVisibleModal(false);
+  };
+
+  const onClickLoadDetailTeamHandle = (generate_id: number) => {
+    dispatch(detailTeamAction(generate_id));
+  };
+
+  useEffect(() => {
+    if (loading.type === GENERATE_TEAM_REQUEST) {
+      setLoadingText("팀 생성 중");
+    }
+    if (loading.type === DETAIL_TEAM_REQUEST) {
+      setLoadingText("팀 정보 로드 중");
+    }
+  }, [loading.type]);
+
   useEffect(() => {
     if (
       [
@@ -106,10 +155,20 @@ const IndexPage = () => {
     ) {
       dispatch(loadUserListAction());
       message.success(success.msg);
-      dispatch(clearStateObj());
     }
+
     if ([GENERATE_TEAM_SUCCESS].includes(success.type)) {
       dispatch(loadTeamListAction({ page: 1 }));
+      if (generate_id) {
+        dispatch(detailTeamAction(generate_id));
+      } else {
+        message.error("팀 정보 호출에 실패 했습니다.");
+      }
+    }
+
+    if ([DETAIL_TEAM_SUCCESS].includes(success.type)) {
+      setVisibleModal(true);
+      dispatch(clearStateObj());
     }
   }, [success.type]);
 
@@ -123,12 +182,24 @@ const IndexPage = () => {
       ].includes(error.type)
     ) {
       message.error(error.msg);
-      dispatch(clearStateObj());
     }
   }, [error.type]);
 
   return (
     <>
+      {[GENERATE_TEAM_REQUEST, DETAIL_TEAM_REQUEST].includes(loading.type) && (
+        <Loading loadingText={loadingText} />
+      )}
+
+      <TeamModal
+        visible={visibleModal}
+        onClose={onClickModalCloseHandle}
+        users={teamDetail?.options?.users}
+        limit={teamDetail?.options?.limit}
+        group={teamDetail?.options?.group}
+        teamCase={teamDetail?.options?.teamCase}
+        teams={teamDetail?.teams}
+      />
       <MainTitle title="오늘은 누구와 먹을까? 냠냠" />
       <ContentWrap>
         <MainContent>
@@ -182,9 +253,7 @@ const IndexPage = () => {
 
           <ContentGroup title="참가 명단">
             <UserWrap>
-              {loading.type === LOAD_USER_LIST_REQUEST &&
-              loading.state &&
-              !userList ? (
+              {loading.type === LOAD_USER_LIST_REQUEST ? (
                 <Skeleton
                   count={5}
                   width={900}
@@ -213,7 +282,15 @@ const IndexPage = () => {
                 ? null
                 : teamList
             }
-          />
+            onClickHandle={onClickLoadDetailTeamHandle}
+          >
+            <TeamPagination
+              currentPage={teamListState.currentPage}
+              maxPage={teamListState.maxPage}
+              onClickPrevHandle={onClickPrevHandle}
+              onClickNextHandle={onClickNextHandle}
+            />
+          </GenerationList>
         </AsideList>
       </ContentWrap>
     </>

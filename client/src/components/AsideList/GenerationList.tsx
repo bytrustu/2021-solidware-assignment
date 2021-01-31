@@ -1,9 +1,10 @@
-import React, { FC } from "react";
+import React, { FC, ReactElement } from "react";
 import styled from "styled-components";
 import Skeleton from "react-loading-skeleton";
 
 const StyleGenerationList = styled.div`
   width: 100%;
+  height: 590px;
   padding: 40px 30px;
   background-color: #fff;
   min-height: 510px;
@@ -60,16 +61,28 @@ export interface IGenerationData {
 type Props = {
   title: string;
   generationData: IGenerationData[] | null;
+  onClickHandle: any;
+  children: ReactElement | ReactElement[];
 };
 
-const GenerationList: FC<Props> = ({ title, generationData }) => {
+const GenerationList: FC<Props> = ({
+  title,
+  generationData,
+  onClickHandle,
+  children,
+}) => {
   return (
     <StyleGenerationList>
       <StyleTitle>{title}</StyleTitle>
       {generationData ? (
         generationData &&
-        generationData.map((item: IGenerationData, index: number) => (
-          <StyleStepWrap key={item.name}>
+        generationData.map((item: IGenerationData) => (
+          <StyleStepWrap
+            key={item.name}
+            onClick={() => {
+              onClickHandle(item.generation_id);
+            }}
+          >
             <StyleStepIndex>{item.generation_id}회차</StyleStepIndex>
             <StyleStepName>
               인원: {item.generation_users}, 팀 수: {item.generation_group},
@@ -78,13 +91,9 @@ const GenerationList: FC<Props> = ({ title, generationData }) => {
           </StyleStepWrap>
         ))
       ) : (
-        <Skeleton
-          count={10}
-          width={200}
-          height={30}
-          style={{ lineHeight: 4 }}
-        />
+        <Skeleton count={9} width={200} height={20} style={{ lineHeight: 4 }} />
       )}
+      {children}
     </StyleGenerationList>
   );
 };

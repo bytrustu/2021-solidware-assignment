@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
-import styled from 'styled-components';
-import Image from 'next/image';
+import React, { FC } from "react";
+import styled from "styled-components";
+import Image from "next/image";
 
 const StyleMainTitle = styled.section`
   display: flex;
@@ -45,12 +45,17 @@ const StyleTitleText = styled.span`
 
 type TypeMainTitle = {
   title: string;
-}
+};
 
-const MainTitle:FC<TypeMainTitle> = ({ title }) => {
+const MainTitle: FC<TypeMainTitle> = ({ title }) => {
   return (
     <StyleMainTitle>
-      <Image src="/images/lunch.svg" width={48} height={48} alt="타이틀이미지"/>
+      <Image
+        src="/images/lunch.svg"
+        width={48}
+        height={48}
+        alt="타이틀이미지"
+      />
       <StyleTitleText>{title}</StyleTitleText>
     </StyleMainTitle>
   );
