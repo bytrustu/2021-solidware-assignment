@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import styled from 'styled-components';
+import React, { FC } from "react";
+import styled from "styled-components";
 
 const StyleButton = styled.button`
   color: #fff;
@@ -20,18 +20,19 @@ const StyleButton = styled.button`
 `;
 
 const StyleButtonText = styled.span`
-  color: #FFF;
+  color: #fff;
   font-size: 14px;
 `;
 
 interface Props {
   text: string;
   onClick: React.MouseEventHandler<HTMLElement>;
+  disabled: boolean;
 }
 
-const Button: FC<Props> = ({ text, onClick }) => {
+const Button: FC<Props> = ({ text, onClick, disabled }) => {
   return (
-    <StyleButton onClick={onClick}>
+    <StyleButton onClick={onClick} disabled={disabled}>
       <StyleButtonText>{text}</StyleButtonText>
     </StyleButton>
   );

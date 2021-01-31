@@ -1,17 +1,16 @@
-import { combineReducers } from 'redux';
-import { HYDRATE } from 'next-redux-wrapper';
-import common, { TCommonReducerState } from 'src/redux/reducers/commonReducer';
+import { combineReducers } from "redux";
+import { HYDRATE } from "next-redux-wrapper";
+import common, { TCommonReducerState } from "../reducers/commonReducer";
 
 export interface IReducerState {
-  user: TCommonReducerState,
+  user: TCommonReducerState;
 }
-
 
 const rootReducer = (state: any = {}, action: any) => {
   switch (action.type) {
     case HYDRATE:
       return action.payload;
-    default : {
+    default: {
       const combineReducer = combineReducers({
         common,
       });

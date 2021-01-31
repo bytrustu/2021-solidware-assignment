@@ -1,5 +1,5 @@
-import React, { FC, ReactElement } from 'react';
-import styled from 'styled-components';
+import React, { FC, ReactElement } from "react";
+import styled from "styled-components";
 
 const StyleUserWrap = styled.div`
   display: grid;
@@ -10,14 +10,10 @@ const StyleUserWrap = styled.div`
 
 type props = {
   children: ReactElement | ReactElement[];
-}
+};
 
-const UserWrap:FC<props> = ({ children }) => {
-  return (
-    <StyleUserWrap>
-      {children}
-    </StyleUserWrap>
-  );
+const UserWrap: FC<props> = ({ children }) => {
+  return <StyleUserWrap>{children}</StyleUserWrap>;
 };
 
 export default UserWrap;

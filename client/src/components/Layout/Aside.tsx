@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import styled from 'styled-components';
+import React, { FC } from "react";
+import styled from "styled-components";
 
 const StyleAside = styled.aside`
   width: 3.5rem;
@@ -9,9 +9,7 @@ const StyleAside = styled.aside`
 `;
 
 const Aside: FC = () => {
-  return (
-    <StyleAside/>
-  );
+  return <StyleAside />;
 };
 
 export default Aside;

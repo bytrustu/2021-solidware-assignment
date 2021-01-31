@@ -1,11 +1,11 @@
-import React, { FC, ReactElement } from 'react';
-import styled from 'styled-components';
+import React, { FC, ReactElement } from "react";
+import styled from "styled-components";
 
 const StyleUser = styled.div`
   text-align: center;
   width: 7rem;
-  max-height: 5rem;
-  margin: .5rem;
+  max-height: 3rem;
+  margin: 0.5rem;
   border: 1px solid #dcdcdc;
   background-color: #fafafa;
   display: flex;
@@ -17,13 +17,18 @@ const StyleUser = styled.div`
 
 type props = {
   name: string;
-  onClick?: Function
-}
+  user_id: number;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  onClick?: Function;
+};
 
-const User:FC<props> = ({ name, onClick }) => {
-  console.log(name);
+const User: FC<props> = ({ name, user_id, onClick }) => {
   return (
-    <StyleUser onClick={() => {onClick && onClick(name)}}>
+    <StyleUser
+      onClick={() => {
+        onClick && onClick(user_id);
+      }}
+    >
       {name}
     </StyleUser>
   );

@@ -10,15 +10,13 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "jsx": "preserve",
     "allowJs": true,
     "noEmit": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "baseUrl": ".",
-    "rootDir": "."
+    "jsx": "preserve"
   },
   "include": [
     "src/**/*"

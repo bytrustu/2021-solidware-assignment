@@ -1,6 +1,6 @@
-import Document, { Head, Html, Main, NextScript } from 'next/document';
-import React from 'react';
-import { ServerStyleSheet } from 'styled-components';
+import Document, { Head, Html, Main, NextScript } from "next/document";
+import React from "react";
+import { ServerStyleSheet } from "styled-components";
 
 export default class MyDocument extends Document {
   render() {
@@ -13,12 +13,15 @@ export default class MyDocument extends Document {
           <meta property="og:title" content="점심 멤버를 나누자" />
           <meta property="og:description" content="점심 멤버를 나누자" />
           <meta name="description" content="점심 멤버를 나누자" />
-          <meta name="keyword" content="점심, 점심 나누기, 팀 나누기, 멤버 나누기" />
+          <meta
+            name="keyword"
+            content="점심, 점심 나누기, 팀 나누기, 멤버 나누기"
+          />
           <title>점심 멤버를 나누자 | 냠냠</title>
         </Head>
         <body>
-        <Main />
-        <NextScript />
+          <Main />
+          <NextScript />
         </body>
       </Html>
     );
@@ -32,7 +35,8 @@ MyDocument.getInitialProps = async (ctx) => {
   try {
     ctx.renderPage = () =>
       originalRenderPage({
-        enhanceApp: (App: any) => (props: any) => styledComponentsSheet.collectStyles(<App {...props} />),
+        enhanceApp: (App: any) => (props: any) =>
+          styledComponentsSheet.collectStyles(<App {...props} />),
       });
 
     const initialProps = await Document.getInitialProps(ctx);

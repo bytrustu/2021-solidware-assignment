@@ -1,5 +1,6 @@
 import React, { FC, ReactElement } from 'react';
 import styled from 'styled-components';
+import Loader from 'react-loader-spinner';
 
 const StyleContentGroup = styled.section`
   display: flex;
@@ -18,11 +19,11 @@ const StyleContentGroupTitle = styled.h4`
 `;
 
 interface Props {
-  title: string,
+  title: string;
   children: ReactElement;
 }
 
-const ContentGroup: FC<Props> = ({ title = '', children }) => {
+const ContentGroup: FC<Props> = ({ title = '',children }) => {
   return (
     <StyleContentGroup>
       <StyleContentGroupTitle>
