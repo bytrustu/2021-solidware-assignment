@@ -38,7 +38,6 @@ export const connect = (fn: any) => async (...args: any) => {
 export const transaction = (fn: any) => async (...args: any) => {
   const con: any = await pool.getConnection();
   await con.beginTransaction();
-  console.log(`>>>>>>>>>>>>>>>>`,args);
   const result = await fn(con, ...args).catch(async (error: any) => {
     await con.rollback();
     con.release();

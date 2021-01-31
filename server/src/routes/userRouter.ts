@@ -1,7 +1,7 @@
-import express, { Request, Response, NextFunction } from 'express';
-import * as db from '../modules/db_query';
-import { testRegExp } from '../util';
-import { IUserName, IUserId, IUserData } from '../type/Interfaces';
+import express, { Request, Response, NextFunction } from "express";
+import * as db from "../modules/db_query";
+import { testRegExp } from "../util";
+import { IUserName, IUserId, IUserData } from "../type/Interfaces";
 
 const router = express.Router();
 
@@ -10,13 +10,13 @@ const router = express.Router();
  * @desc    request user list
  * @access  public
  */
-router.get('/list', async (req: Request, res: Response, next: NextFunction) => {
+router.get("/list", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userDataList: IUserData[] = await db.userDataList();
     res.status(200).json(userDataList);
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ 'msg': '오류가 발생 했습니다.' });
+    return res.status(500).json({ msg: "오류가 발생 했습니다." });
   }
 });
 
@@ -25,21 +25,21 @@ router.get('/list', async (req: Request, res: Response, next: NextFunction) => {
  * @desc    register user
  * @access  public
  */
-router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
+router.post("/add", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name }: IUserName = req.body;
-    if (!testRegExp('name', name)) {
-      return res.status(500).json({ 'msg': '이름이 올바르지 않습니다.' });
+    if (!testRegExp("name", name)) {
+      return res.status(500).json({ msg: "이름이 올바르지 않습니다." });
     }
     const findUserData: IUserData[] = await db.findUserByUserName({ name });
     if (findUserData.length > 0) {
-      return res.status(500).json({ 'msg': '이미 등록 된 이름 입니다.' });
+      return res.status(500).json({ msg: "이미 등록 된 이름 입니다." });
     }
     await db.insertUserName({ name });
-    res.status(200).send();
+    res.status(200).json({ msg: "인원을 추가 하였습니다." });
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ 'msg': '오류가 발생 했습니다.' });
+    return res.status(500).json({ msg: "오류가 발생 했습니다." });
   }
 });
 
@@ -48,35 +48,41 @@ router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
  * @desc    delete user
  * @access  public
  */
-router.post('/delete', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { user_id }: IUserId = req.body;
-    await db.deleteUserByUserId({ user_id });
-    res.status(200).send();
-  } catch (e) {
-    console.error(e);
-    return res.status(500).json({ 'msg': '오류가 발생 했습니다.' });
+router.post(
+  "/delete",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { user_id }: IUserId = req.body;
+      await db.deleteUserByUserId({ user_id });
+      res.status(200).json({ msg: "인원을 삭제 하였습니다." });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ msg: "오류가 발생 했습니다." });
+    }
   }
-});
+);
 
 /**
  * @route   POST api/user/edit
  * @desc    edit user
  * @access  public
  */
-router.post('/edit', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { user_id, name }: IUserData = req.body;
-    const findUserData: IUserData[] = await db.findUserByUserName({ name });
-    if (findUserData.length > 0) {
-      return res.status(500).json({ 'msg': '이미 등록 된 이름 입니다.' });
+router.post(
+  "/edit",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { user_id, name }: IUserData = req.body;
+      const findUserData: IUserData[] = await db.findUserByUserName({ name });
+      if (findUserData.length > 0) {
+        return res.status(500).json({ msg: "이미 등록 된 이름 입니다." });
+      }
+      await db.editUserNameByUserId({ user_id, name });
+      res.status(200).send();
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ msg: "오류가 발생 했습니다." });
     }
-    await db.editUserNameByUserId({ user_id, name });
-    res.status(200).send();
-  } catch (e) {
-    console.error(e);
-    return res.status(500).json({ 'msg': '오류가 발생 했습니다.' });
   }
-});
+);
 
 export default router;
