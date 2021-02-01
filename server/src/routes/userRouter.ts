@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import * as db from "../modules/db_query";
-import { testRegExp } from "../util";
+import { generateMessage, testRegExp } from "../util";
 import { IUserName, IUserId, IUserData } from "../type/Interfaces";
 
 const router = express.Router();
@@ -11,12 +11,15 @@ const router = express.Router();
  * @access  public
  */
 router.get("/list", async (req: Request, res: Response, next: NextFunction) => {
+  const notLoadUserListMsg = generateMessage(
+    "유저 리스트 호출에 실패 했습니다."
+  );
   try {
     const userDataList: IUserData[] = await db.userDataList();
     res.status(200).json(userDataList);
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ msg: "오류가 발생 했습니다." });
+    return res.status(500).json(notLoadUserListMsg);
   }
 });
 
@@ -39,7 +42,7 @@ router.post("/add", async (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json({ msg: "인원을 추가 하였습니다." });
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ msg: "오류가 발생 했습니다." });
+    return res.status(500).json({ msg: "인원 추가를 실패 했습니다." });
   }
 });
 
@@ -57,7 +60,7 @@ router.post(
       res.status(200).json({ msg: "인원을 삭제 하였습니다." });
     } catch (e) {
       console.error(e);
-      return res.status(500).json({ msg: "오류가 발생 했습니다." });
+      return res.status(500).json({ msg: "인원 삭제를 실패 했습니다.." });
     }
   }
 );
@@ -80,7 +83,7 @@ router.post(
       res.status(200).send();
     } catch (e) {
       console.error(e);
-      return res.status(500).json({ msg: "오류가 발생 했습니다." });
+      return res.status(500).json({ msg: "이름 변경을 실패 했습니다." });
     }
   }
 );

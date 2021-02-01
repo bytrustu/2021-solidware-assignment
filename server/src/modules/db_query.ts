@@ -1,7 +1,5 @@
 import * as db from "../config/mysql_connect";
 import {
-  ITeamData,
-  IRequestDetail,
   IUserData,
   IUserId,
   IUserName,

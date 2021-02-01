@@ -1,7 +1,7 @@
-import 'dotenv/config';
+import "dotenv/config";
 
 export interface IProcessEnv {
-  [key: string]: string | undefined
+  [key: string]: string | undefined;
 }
 
 const config: IProcessEnv = {

@@ -4,10 +4,10 @@ import { generateMessage, removeTextRow } from "../util";
 import {
   ITeamFilter,
   TTeamData,
-  IRequestDetail,
   ITeamAndUser,
   IResultTeam,
   IGenerationData,
+  IUserId,
 } from "../type/Interfaces";
 import { generateTeam } from "../util/generateTeam";
 
@@ -26,10 +26,10 @@ router.post(
       "팀 목록 불러오기에 실패했습니다."
     );
     try {
-      const { page }: { page: number } = req.body;
+      let { page }: { page: number } = req.body;
+      if (page < 1) page = 1;
       const teamList: IGenerationData[] = await db.loadTeamList({ page });
       const teamListCount: number = await db.loadTeamCount();
-      console.log(teamListCount);
       const maxPage = Math.ceil(teamListCount / 5);
       res.status(200).json({ teamList, currentPage: page, maxPage });
     } catch (e) {
@@ -48,11 +48,10 @@ router.post(
 router.post(
   "/generate",
   async (req: Request, res: Response, next: NextFunction) => {
+    const notCreateTeamMsg = generateMessage("그룹을 생성할 수 없습니다.");
     try {
       const { minUserCount, teamCount }: ITeamFilter = req.body;
-      const notCreateTeamMsg = generateMessage("그룹을 생성할 수 없습니다.");
-
-      let userIdList: any[] = await db.userIdList();
+      let userIdList: IUserId[] = await db.userIdList();
       if (userIdList.length === 0) {
         return res.status(500).json(notCreateTeamMsg);
       }
@@ -85,7 +84,7 @@ router.post(
         .json({ generate_id: generationRow, msg: "팀이 생성 되었습니다." });
     } catch (e) {
       console.error(e);
-      return res.status(500).json({ msg: "오류가 발생 했습니다." });
+      return res.status(500).json(notCreateTeamMsg);
     }
   }
 );
@@ -98,8 +97,8 @@ router.post(
 router.get(
   "/detail/:generate_id",
   async (req: Request, res: Response, next: NextFunction) => {
+    const notLoadDetailMsg = generateMessage("팀 정보 호출에 실패 했습니다.");
     try {
-      const notLoadDetailMsg = generateMessage("팀 정보 호출에 실패 했습니다.");
       const { generate_id } = req.params;
       const generation_id: number = parseInt(generate_id, 10);
 
@@ -130,7 +129,7 @@ router.get(
       }
 
       const resultTeamList: IResultTeam = findTeamList.reduce(
-        (acc: any[], curr: ITeamAndUser) => {
+        (acc: IResultTeam, curr: ITeamAndUser) => {
           const { team_step, team_name, name, disabled } = curr;
           if (!Array.isArray(acc[team_step])) acc[team_step] = [];
           if (!Array.isArray(acc[team_step][team_name]))
@@ -146,7 +145,7 @@ router.get(
         .json({ teams: resultTeamList, options: resultTeamOptions });
     } catch (e) {
       console.error(e);
-      return res.status(500).json({ msg: "오류가 발생 했습니다." });
+      return res.status(500).json(notLoadDetailMsg);
     }
   }
 );

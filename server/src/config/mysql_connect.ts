@@ -1,5 +1,5 @@
-import * as mysql from 'mysql2/promise';
-import config from './index';
+import * as mysql from "mysql2/promise";
+import config from "./index";
 
 type MysqlConfig = {
   host: string | undefined;
@@ -9,7 +9,7 @@ type MysqlConfig = {
   database: string | undefined;
   connectionLimit: number;
   waitForConnections: boolean;
-}
+};
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = config;
 

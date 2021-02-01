@@ -7,6 +7,10 @@ create table `User` (
 
 create table `Generation` (
  `generation_id` int not null auto_increment primary key, -- 팀 생성 기수 index
+ `generation_users` int not null,
+ `generation_limit` int not null,
+ `generation_group` int not null,
+ `generation_case` text not null,
  `create_date` timestamp not null default current_timestamp -- 팀 기수 생성일
 )
 
@@ -22,5 +26,6 @@ create table `Member` (
  `member_id` int not null auto_increment primary key, -- 소속 멤버 index
  `user_id` int not null, -- 유저 index
  `team_id` int not null, -- 팀 index
+ FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE,
  FOREIGN KEY (`team_id`) REFERENCES `Team` (`team_id`) ON DELETE CASCADE
 );

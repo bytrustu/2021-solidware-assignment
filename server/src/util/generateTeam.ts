@@ -1,4 +1,5 @@
 import { shuffleArray } from "../util/index";
+import { IUserId } from "../type/Interfaces";
 
 type TypeSplitTeamCase = (
   userLength: number,
@@ -18,7 +19,11 @@ const splitTeamCase: TypeSplitTeamCase = (userLength, group, limit) => {
   return teamArray;
 };
 
-export const generateTeam = (users: number[], group: number, limit: number) => {
+export const generateTeam = (
+  users: IUserId[],
+  group: number,
+  limit: number
+) => {
   const userLength: number = users.length;
   const teamCase: number[][] = splitTeamCase(userLength, group, limit);
   const teams: any[][] = [];
