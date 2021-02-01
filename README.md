@@ -14,6 +14,7 @@ http://133.186.159.157:3005
 4. cd ./server && npm install && npm run dev
 5. open browser and go to "http://localhost:3005"
 
+
 ## Video
 [![유튜브 영상](https://i.imgur.com/fkh4Yvs.png)](https://youtu.be/wQnJ_V-ZFBQ)
 
@@ -28,3 +29,6 @@ http://133.186.159.157:3005
 8. 팀 정보는 생성된 케이스별로 인원을 `랜덤으로 분배` 하여 표시하도록 하였습니다.
 9. 참가 명단과 최근 팀 생성 목록은 `스켈레톤 UI`를 적용하였습니다.
 10. 팀 생성과 팀 정보 호출 시 빠르게 연산 되더라도 `사용자 경험`을 위해 1~2초 로딩 지연시간을 주었습니다.
+
+## ERD
+![ERD](https://i.imgur.com/2ZPoKEF.png)
