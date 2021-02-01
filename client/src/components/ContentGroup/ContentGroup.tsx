@@ -1,13 +1,12 @@
-import React, { FC, ReactElement } from 'react';
-import styled from 'styled-components';
-import Loader from 'react-loader-spinner';
+import React, { FC, ReactElement } from "react";
+import styled from "styled-components";
 
 const StyleContentGroup = styled.section`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   margin-top: 2rem;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   margin-left: 3rem;
   padding: 0 0 2rem;
 `;
@@ -23,15 +22,11 @@ interface Props {
   children: ReactElement;
 }
 
-const ContentGroup: FC<Props> = ({ title = '',children }) => {
+const ContentGroup: FC<Props> = ({ title = "", children }) => {
   return (
     <StyleContentGroup>
-      <StyleContentGroupTitle>
-        {title}
-      </StyleContentGroupTitle>
-      {
-        children
-      }
+      <StyleContentGroupTitle>{title}</StyleContentGroupTitle>
+      {children}
     </StyleContentGroup>
   );
 };

@@ -1,6 +1,5 @@
-import React, { FC } from 'react';
-import styled from 'styled-components';
-import Image from 'next/image';
+import React, { FC, ReactElement } from "react";
+import styled from "styled-components";
 
 const StyleMainContent = styled.section`
   display: flex;
@@ -9,13 +8,12 @@ const StyleMainContent = styled.section`
   height: auto;
 `;
 
-
-const MainContent:FC = ({ children }) => {
-  return (
-    <StyleMainContent>
-      {children}
-    </StyleMainContent>
-  );
+type TypeMainContent = {
+  children: ReactElement | ReactElement[];
 };
 
-export default MainContent;
+const MainContent: FC<TypeMainContent> = ({ children }) => {
+  return <StyleMainContent>{children}</StyleMainContent>;
+};
+
+export default React.memo(MainContent);

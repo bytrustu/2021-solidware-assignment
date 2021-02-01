@@ -9,15 +9,20 @@ const useInput = (initValue: any) => {
     setValue(e.target.value);
   }, []);
 
-  const reset = ():void => {
+  const reset = (): void => {
     let resetData: any;
-    if (typeof initValue === 'string') resetData = '';
-    if (typeof initValue === 'number') resetData = 0;
-    if (typeof initValue === 'boolean') resetData = false;
+    if (typeof initValue === "string") resetData = "";
+    if (typeof initValue === "number") resetData = 0;
+    if (typeof initValue === "boolean") resetData = false;
     setValue(resetData);
-  }
+  };
 
-  return [value, handler, setValue, reset] as [typeof initValue, onChangeType, typeof setValue, () => void];
+  return [value, handler, setValue, reset] as [
+    typeof initValue,
+    onChangeType,
+    typeof setValue,
+    () => void
+  ];
 };
 
 export default useInput;

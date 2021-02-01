@@ -18,4 +18,4 @@ const TeamWrap: FC<props> = ({ children }) => {
   return <StyleTeamWrap>{children}</StyleTeamWrap>;
 };
 
-export default TeamWrap;
+export default React.memo(TeamWrap);

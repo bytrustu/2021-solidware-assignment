@@ -1,5 +1,5 @@
-import React, { FC, ReactElement } from 'react';
-import styled from 'styled-components';
+import React, { FC, ReactElement } from "react";
+import styled from "styled-components";
 
 const StyleInputNumber = styled.input`
   height: 2.5rem;
@@ -18,19 +18,26 @@ const StyleInputNumber = styled.input`
   &:focus {
     outline: unset;
   }
-`
+`;
 
 interface Props {
   value?: number;
   onChange?: React.ChangeEventHandler<HTMLElement>;
   placeholder?: string;
-  min?: number,
-  max?: number,
+  min?: number;
+  max?: number;
 }
 
-const InputNumber: FC<Props> = ({value, onChange, placeholder, min, max}) => {
+const InputNumber: FC<Props> = ({ value, onChange, placeholder, min, max }) => {
   return (
-    <StyleInputNumber type="number" value={value} onChange={onChange} placeholder={placeholder} min={min} max={max}/>
+    <StyleInputNumber
+      type="number"
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      min={min}
+      max={max}
+    />
   );
 };
 

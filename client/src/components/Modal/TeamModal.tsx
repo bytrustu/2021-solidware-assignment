@@ -183,7 +183,7 @@ const TeamModal: FC<TypeTeamModal> = ({
         <StyleTeamBody>
           {teamCase &&
             teamCase.map((el: number[]) => (
-              <Tag color="#ddd">{el.join(', ')}</Tag>
+              <Tag color="#ddd">{el.join(", ")}</Tag>
             ))}
         </StyleTeamBody>
       </StyleTeamWrap>
@@ -194,7 +194,7 @@ const TeamModal: FC<TypeTeamModal> = ({
             teams.map((temStep: any, stepIndex: number) => {
               return (
                 <TeamWrap>
-                  <TeamTitle title={teamCase[stepIndex].join(' , ')} />
+                  <TeamTitle title={teamCase[stepIndex].join(" , ")} />
                   {temStep.map((users: any[], usersIndex: number) => {
                     console.log(users);
                     return (
@@ -205,7 +205,7 @@ const TeamModal: FC<TypeTeamModal> = ({
                           </Tag>
                         ))}
                       </TeamUsersWrap>
-                    )
+                    );
                   })}
                 </TeamWrap>
               );
@@ -216,4 +216,4 @@ const TeamModal: FC<TypeTeamModal> = ({
   );
 };
 
-export default TeamModal;
+export default React.memo(TeamModal);

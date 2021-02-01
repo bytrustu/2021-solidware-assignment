@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import styled from 'styled-components';
+import React, { FC, ReactElement } from "react";
+import styled from "styled-components";
 
 const StyleContentWrap = styled.section`
   width: 100%;
@@ -12,13 +12,12 @@ const StyleContentWrap = styled.section`
   margin-top: 2rem;
 `;
 
-
-const ContentWrap:FC = ({ children }) => {
-  return (
-    <StyleContentWrap>
-      {children}
-    </StyleContentWrap>
-  );
+type TypeContentWrap = {
+  children: ReactElement | ReactElement[];
 };
 
-export default ContentWrap;
+const ContentWrap: FC<TypeContentWrap> = ({ children }) => {
+  return <StyleContentWrap>{children}</StyleContentWrap>;
+};
+
+export default React.memo(ContentWrap);

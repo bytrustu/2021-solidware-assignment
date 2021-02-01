@@ -127,12 +127,9 @@ type TypeMainTitle = {
 };
 
 const Loading: FC<TypeMainTitle> = ({ loadingText }) => {
-  const arr: number[] = range(20, 1);
   return (
     <StyleBlockPage>
-      <StyleLoadingText>
-        {loadingText}
-      </StyleLoadingText>
+      <StyleLoadingText>{loadingText}</StyleLoadingText>
       <StyleLoadingWrap>
         <StyledLoaderElement />
         <StyledLoaderElement />
@@ -145,4 +142,4 @@ const Loading: FC<TypeMainTitle> = ({ loadingText }) => {
   );
 };
 
-export default Loading;
+export default React.memo(Loading);

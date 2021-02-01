@@ -1,6 +1,7 @@
 import React, { FC, ReactElement } from "react";
 import styled from "styled-components";
 import Skeleton from "react-loading-skeleton";
+import { IGenerationData } from "../../type/interfaces";
 
 const StyleGenerationList = styled.div`
   width: 100%;
@@ -54,10 +55,6 @@ const StyleStepName = styled.span`
   }
 `;
 
-export interface IGenerationData {
-  [key: string]: string;
-}
-
 type Props = {
   title: string;
   generationData: IGenerationData[] | null;
@@ -85,8 +82,8 @@ const GenerationList: FC<Props> = ({
           >
             <StyleStepIndex>{item.generation_id}회차</StyleStepIndex>
             <StyleStepName>
-              인원: {item.generation_users}, 팀 수: {item.generation_group},
-              최소 인원: {item.generation_limit}
+              인원: {item.generation_users}, 최소 인원: {item.generation_limit},
+              팀 수: {item.generation_group}
             </StyleStepName>
           </StyleStepWrap>
         ))
@@ -98,4 +95,4 @@ const GenerationList: FC<Props> = ({
   );
 };
 
-export default GenerationList;
+export default React.memo(GenerationList);

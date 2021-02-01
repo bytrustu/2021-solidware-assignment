@@ -1,6 +1,5 @@
-import React, { FC } from 'react';
-import styled from 'styled-components';
-import Image from 'next/image';
+import React, { FC, ReactElement } from 'react';
+import styled from "styled-components";
 
 const StyleAsideList = styled.aside`
   width: 270px;
@@ -8,12 +7,12 @@ const StyleAsideList = styled.aside`
   position: relative;
 `;
 
-const AsideList:FC = ({ children }) => {
-  return (
-    <StyleAsideList>
-      {children}
-    </StyleAsideList>
-  );
+type TypeAsideList = {
+  children: ReactElement | ReactElement[];
 };
 
-export default AsideList;
+const AsideList: FC<TypeAsideList> = ({ children }) => {
+  return <StyleAsideList>{children}</StyleAsideList>;
+};
+
+export default React.memo(AsideList);

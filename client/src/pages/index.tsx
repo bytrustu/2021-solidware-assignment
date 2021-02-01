@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { END } from "redux-saga";
 import wrapper from "../store/configureStore";
@@ -8,19 +8,15 @@ import {
   registerUserAction,
   deleteUserAction,
   generateTeamAction,
-  TStateObj,
   clearStateObj,
   loadTeamListAction,
-  TTeamListState,
   detailTeamAction,
 } from "../redux/reducers/commonReducer";
 import MainTitle from "../components/MainTitle/MainTitle";
 import ContentWrap from "../components/MainContent/ContentWrap";
 import MainContent from "../components/MainContent/MainContent";
 import AsideList from "../components/AsideList/AsideList";
-import GenerationList, {
-  IGenerationData,
-} from "../components/AsideList/GenerationList";
+import GenerationList from "../components/AsideList/GenerationList";
 import ContentGroup from "../components/ContentGroup/ContentGroup";
 import ContentGroupInputGroup from "../components/ContentGroup/ContentGroupInputGroup";
 import ContentGroupInput from "../components/ContentGroup/ContentGroupInput";
@@ -33,7 +29,6 @@ import UserWrap from "../components/User/UserWrap";
 import User from "../components/User/User";
 import { RootState } from "../redux/reducers";
 import {
-  CLEAR_STATE_OBJECT,
   DELETE_USER_FAILURE,
   DELETE_USER_SUCCESS,
   DETAIL_TEAM_REQUEST,
@@ -44,44 +39,15 @@ import {
   LOAD_TEAM_LIST_REQUEST,
   LOAD_USER_LIST_FAILURE,
   LOAD_USER_LIST_REQUEST,
-  LOAD_USER_LIST_SUCCESS,
   REGISTER_USER_FAILURE,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
 } from "../redux/types";
-import { TypeGenerationOptions, TypeTeams } from "../type/types";
-import { ITeamDetail } from "../type/interfaces";
+import { TypeCommonState } from "../type/types";
 import Skeleton from "react-loading-skeleton";
 import TeamPagination from "../components/Pagination/TeamPagination";
 import Loading from "../components/Loading/Loading";
 import TeamModal from "../components/Modal/TeamModal";
-
-type TypeFormState = {
-  name: string;
-  limitUser: number;
-  groupCount: number;
-};
-
-type TypeUser = {
-  user_id: number;
-  name: string;
-};
-
-type TypeTeamUser = {
-  name: string;
-  disabled: number;
-};
-
-type TypeCommonState = {
-  userList: TypeUser[];
-  teamList: IGenerationData[];
-  teamListState: TTeamListState;
-  teamDetail: ITeamDetail;
-  generate_id: number | null;
-  success: TStateObj;
-  loading: TStateObj;
-  error: TStateObj;
-};
 
 const MIN = 2;
 const MAX = 10;
@@ -100,41 +66,49 @@ const IndexPage = () => {
   }: TypeCommonState = useSelector((state: RootState) => state.common);
 
   const [name, onChangeName, , resetName] = useInput("");
-  const [group, onChangeGroup, , resetGroup] = useInput(2);
-  const [limit, onChangeLimit, , resetLimit] = useInput(1);
+  const [group, onChangeGroup] = useInput(2);
+  const [limit, onChangeLimit] = useInput(1);
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [loadingText, setLoadingText] = useState<string>("");
 
-  const onClickRegisterUserHandle = (): void => {
+  const nameRef = useRef<HTMLElement>();
+
+  const onClickRegisterUserHandle = useCallback((): void => {
     dispatch(registerUserAction(name));
     resetName();
-  };
+    if (nameRef.current) {
+      nameRef.current.focus();
+    }
+  }, [name]);
 
-  const onClickProcessGroupHanlde = (): void => {
+  const onClickProcessGroupHanlde = useCallback((): void => {
     dispatch(generateTeamAction({ teamCount: group, minUserCount: limit }));
-  };
+  }, [group, limit]);
 
-  const onClickRemoveUserHandle = (user_id: number): void => {
+  const onClickRemoveUserHandle = useCallback((user_id: number): void => {
     dispatch(deleteUserAction(user_id));
-  };
+  }, []);
 
-  const onClickPrevHandle = () => {
+  const onClickPrevHandle = useCallback((): void => {
     teamListState &&
       dispatch(loadTeamListAction({ page: teamListState.currentPage - 1 }));
-  };
+  }, [teamListState]);
 
-  const onClickNextHandle = () => {
+  const onClickNextHandle = useCallback((): void => {
     teamListState &&
       dispatch(loadTeamListAction({ page: teamListState.currentPage + 1 }));
-  };
+  }, [teamListState]);
 
-  const onClickModalCloseHandle = () => {
+  const onClickModalCloseHandle = useCallback((): void => {
     setVisibleModal(false);
-  };
+  }, []);
 
-  const onClickLoadDetailTeamHandle = (generate_id: number) => {
-    dispatch(detailTeamAction(generate_id));
-  };
+  const onClickLoadDetailTeamHandle = useCallback(
+    (generate_id: number): void => {
+      dispatch(detailTeamAction(generate_id));
+    },
+    []
+  );
 
   useEffect(() => {
     if (loading.type === GENERATE_TEAM_REQUEST) {
@@ -190,7 +164,6 @@ const IndexPage = () => {
       {[GENERATE_TEAM_REQUEST, DETAIL_TEAM_REQUEST].includes(loading.type) && (
         <Loading loadingText={loadingText} />
       )}
-
       <TeamModal
         visible={visibleModal}
         onClose={onClickModalCloseHandle}
@@ -211,6 +184,7 @@ const IndexPage = () => {
                   value={name}
                   maxLength={6}
                   placeholder="이름 입력"
+                  inputRef={nameRef}
                 />
                 <Button
                   onClick={onClickRegisterUserHandle}
@@ -301,11 +275,10 @@ export default IndexPage;
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    context.store.dispatch(loadUserListAction());
-    context.store.dispatch(loadTeamListAction({ page: 1 }));
-    context.store.dispatch(END);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    await context.store.sagaTask.toPromise();
+    const store: any = context.store;
+    store.dispatch(loadUserListAction());
+    store.dispatch(loadTeamListAction({ page: 1 }));
+    store.dispatch(END);
+    await store.sagaTask.toPromise();
   }
 );

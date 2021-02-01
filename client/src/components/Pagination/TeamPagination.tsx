@@ -81,4 +81,4 @@ const TeamPagination: FC<TypeMainTitle> = ({
   );
 };
 
-export default TeamPagination;
+export default React.memo(TeamPagination);

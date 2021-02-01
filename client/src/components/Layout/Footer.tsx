@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import styled from 'styled-components';
+import React, { FC } from "react";
+import styled from "styled-components";
 
 const StyleFooter = styled.footer`
   height: 3.5rem;
@@ -8,9 +8,7 @@ const StyleFooter = styled.footer`
 `;
 
 const Footer: FC = () => {
-  return (
-    <StyleFooter/>
-  );
+  return <StyleFooter />;
 };
 
-export default Footer;
+export default React.memo(Footer);

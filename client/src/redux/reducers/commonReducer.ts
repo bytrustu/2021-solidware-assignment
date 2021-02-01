@@ -20,31 +20,9 @@ import {
   DETAIL_TEAM_FAILURE,
   CLEAR_STATE_OBJECT,
 } from "../types";
-import { loadUserList, loadUserListAPI } from "../sagas/commonSaga";
+import { TStateObj, TypeInitialState } from "../../type/types";
 
-export type TStateObj = {
-  type: string;
-  state: boolean;
-  msg: string;
-};
-
-export type TTeamListState = {
-  currentPage: number;
-  maxPage: number;
-};
-
-type TypeInitialState = {
-  loading: TStateObj;
-  error: TStateObj;
-  success: TStateObj;
-  userList: any[];
-  teamList: any[];
-  teamListState: TTeamListState;
-  teamDetail: any[];
-  generate_id: number | null;
-};
-
-const stateObj: TStateObj = {
+export const stateObj: TStateObj = {
   type: "",
   state: false,
   msg: "",
@@ -93,13 +71,6 @@ export const detailTeamAction = (generateIndex: number) => ({
 export const clearStateObj = () => ({
   type: CLEAR_STATE_OBJECT,
 });
-
-export type CommonAction =
-  | ReturnType<typeof registerUserAction>
-  | ReturnType<typeof loadUserListAction>
-  | ReturnType<typeof deleteUserAction>
-  | ReturnType<typeof generateTeamAction>
-  | ReturnType<typeof detailTeamAction>;
 
 export type TCommonReducerState = typeof initialState;
 

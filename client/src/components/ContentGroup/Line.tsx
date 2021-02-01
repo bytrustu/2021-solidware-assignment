@@ -1,5 +1,5 @@
-import React, { FC, ReactElement } from 'react';
-import styled from 'styled-components';
+import React, { FC } from "react";
+import styled from "styled-components";
 
 const StyleLine = styled.section`
   width: 65vw;
@@ -8,9 +8,7 @@ const StyleLine = styled.section`
 `;
 
 const Line: FC = () => {
-  return (
-    <StyleLine/>
-  );
+  return <StyleLine />;
 };
 
 export default React.memo(Line);

@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
 
 const StyleUser = styled.div`
@@ -19,7 +19,7 @@ type props = {
   name: string;
   user_id: number;
   // eslint-disable-next-line @typescript-eslint/ban-types
-  onClick?: Function;
+  onClick?: any;
 };
 
 const User: FC<props> = ({ name, user_id, onClick }) => {
@@ -34,4 +34,4 @@ const User: FC<props> = ({ name, user_id, onClick }) => {
   );
 };
 
-export default User;
+export default React.memo(User);

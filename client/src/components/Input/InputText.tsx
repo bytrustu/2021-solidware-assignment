@@ -1,5 +1,5 @@
-import React, { FC, ReactElement } from 'react';
-import styled from 'styled-components';
+import React, { FC } from "react";
+import styled from "styled-components";
 
 const StyleInputText = styled.input`
   height: 2.5rem;
@@ -18,18 +18,32 @@ const StyleInputText = styled.input`
   &:focus {
     outline: unset;
   }
-`
+`;
 
 interface Props {
   value?: string;
   maxLength?: number;
   onChange?: React.ChangeEventHandler<HTMLElement>;
   placeholder?: string;
+  inputRef?: any;
 }
 
-const InputText: FC<Props> = ({value, maxLength, onChange, placeholder}) => {
+const InputText: FC<Props> = ({
+  value,
+  maxLength,
+  onChange,
+  placeholder,
+  inputRef,
+}) => {
   return (
-    <StyleInputText type="text" value={value} maxLength={maxLength} onChange={onChange} placeholder={placeholder}/>
+    <StyleInputText
+      type="text"
+      value={value}
+      maxLength={maxLength}
+      onChange={onChange}
+      placeholder={placeholder}
+      ref={inputRef}
+    />
   );
 };
 

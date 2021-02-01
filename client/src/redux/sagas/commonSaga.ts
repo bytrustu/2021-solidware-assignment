@@ -1,7 +1,8 @@
-import { all, fork, put, call } from "redux-saga/effects";
+import { all, fork, put } from "redux-saga/effects";
 import * as Eff from "redux-saga/effects";
 
 const takeLatest: any = Eff.takeLatest;
+const call: any = Eff.call;
 
 import axios from "axios";
 import {
@@ -112,8 +113,6 @@ function loadTeamListAPI(data: { page: number }) {
 
 function* loadTeamList(action: { data: number }) {
   try {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const result = yield call(loadTeamListAPI, action.data);
     yield sleep(0.5);
     yield put({
@@ -140,8 +139,6 @@ function generateTeamAPI(data: { teamCount: number; minUserCount: number }) {
 
 function* generateTeam(action: { data: number }) {
   try {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const result = yield call(generateTeamAPI, action.data);
     yield sleep(1);
     yield put({
@@ -168,8 +165,6 @@ function detailTeamAPI(data: number) {
 
 function* detailTeam(action: { data: number }) {
   try {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const result = yield call(detailTeamAPI, action.data);
     yield sleep(2);
     yield put({

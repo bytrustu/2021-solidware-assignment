@@ -1,5 +1,5 @@
-import React, { FC, ReactElement } from 'react';
-import styled from 'styled-components';
+import React, { FC, ReactElement } from "react";
+import styled from "styled-components";
 
 const StyleTeamUsersWrap = styled.div`
   width: 100%;
@@ -26,10 +26,10 @@ const StyleTeamName = styled.div`
   position: absolute;
   width: 2rem;
   height: 2rem;
-  border-radius: .2rem;
+  border-radius: 0.2rem;
   background-color: #ff8e8e;
-  left: -.5rem;
-  top: -.5rem;
+  left: -0.5rem;
+  top: -0.5rem;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -52,4 +52,4 @@ const TeamUsersWrap: FC<props> = ({ teamIndex, children }) => {
   );
 };
 
-export default TeamUsersWrap;
+export default React.memo(TeamUsersWrap);

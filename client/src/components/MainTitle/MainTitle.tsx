@@ -61,4 +61,4 @@ const MainTitle: FC<TypeMainTitle> = ({ title }) => {
   );
 };
 
-export default MainTitle;
+export default React.memo(MainTitle);

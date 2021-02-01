@@ -12,4 +12,4 @@ const Aside: FC = () => {
   return <StyleAside />;
 };
 
-export default Aside;
+export default React.memo(Aside);
