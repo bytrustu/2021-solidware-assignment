@@ -182,8 +182,10 @@ const TeamModal: FC<TypeTeamModal> = ({
         <StyleTeamSubTitle>팀 케이스</StyleTeamSubTitle>
         <StyleTeamBody>
           {teamCase &&
-            teamCase.map((el: number[]) => (
-              <Tag color="#ddd">{el.join(", ")}</Tag>
+            teamCase.map((el: number[], elIndex: number) => (
+              <Tag key={elIndex} color="#ddd">
+                {el.join(", ")}
+              </Tag>
             ))}
         </StyleTeamBody>
       </StyleTeamWrap>
@@ -193,14 +195,16 @@ const TeamModal: FC<TypeTeamModal> = ({
           {teams &&
             teams.map((temStep: any, stepIndex: number) => {
               return (
-                <TeamWrap>
+                <TeamWrap key={stepIndex}>
                   <TeamTitle title={teamCase[stepIndex].join(" , ")} />
                   {temStep.map((users: any[], usersIndex: number) => {
-                    console.log(users);
                     return (
-                      <TeamUsersWrap teamIndex={usersIndex}>
-                        {users.map((user) => (
-                          <Tag color={user.disabled === 0 ? "#108ee9" : "#f50"}>
+                      <TeamUsersWrap key={usersIndex} teamIndex={usersIndex}>
+                        {users.map((user, userIndex) => (
+                          <Tag
+                            key={userIndex}
+                            color={user.disabled === 0 ? "#108ee9" : "#f50"}
+                          >
                             {user.name}
                           </Tag>
                         ))}
